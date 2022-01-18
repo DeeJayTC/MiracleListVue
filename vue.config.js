@@ -7,7 +7,8 @@ module.exports = {
       devtool: 'source-map',
     },
     chainWebpack: config => {
-      config
+     config.plugins.delete('prefetch') // für echtes Lazy Loading der Chunks https://github.com/vuejs/vue-cli/issues/5562
+     config
           .plugin('define')
           .tap(args => {
              // Daten aus package.json' für main.ts in process.env speichern

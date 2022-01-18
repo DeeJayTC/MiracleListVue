@@ -12,7 +12,7 @@
       class="col-xs-6 col-lg-9 col-sm-7 col-md-8 hidden-xs"
       style="vertical-align: middle;margin-top:10px"
     >
-      <UserStatus :Username="Username"></UserStatus>
+      <UserStatus :Username="AppState.Username.value"></UserStatus>
     </span>
 
     <span class="col-xs-1">
@@ -27,7 +27,7 @@
               <router-link to="/About">About this App</router-link>
             </li>
             <li>
-              <router-link to="/Home">Home</router-link>
+              <router-link to="/">Home</router-link>
             </li>
             <li>
               <router-link to="/Login">Login</router-link>
@@ -69,22 +69,20 @@
   <!-- Alternative Anzeige dieses Blocks unten auf kleinen Displays -->
   <div class="row">
     <span class="col-xs-12 hidden-sm hidden-md hidden-lg">
-      <UserStatus :Username="Username"></UserStatus>
+      <UserStatus :Username="AppState.Username.value"></UserStatus>
     </span>
   </div>
 </template>
 
 <script setup lang="ts">
 import moment from 'moment';
-import { ref, computed, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import { useRoute } from 'vue-router'
 import router from './router'
-import UserStatus from './components/UserStatus.vue';
-import { AppState } from './services/AppState';
 import { version as vueVersion } from 'vue';
 import { version as appVersion, releaseDate } from '../package.json'
-
-let Username = ref(AppState.Username || "");
+import UserStatus from './components/UserStatus.vue';
+import { AppState } from './services/AppState';
 
 const route = useRoute();
 function ShowAbout() {
@@ -94,12 +92,5 @@ function ShowAbout() {
 
 onMounted(() => {
   console.log("App.vue:OnMounted");
-  // Reaktion auf globale Zustandsänderung
-  window.addEventListener('StateHasChanged', (e) => SetStatus(), false);
-});
-
-function SetStatus() {
-  if (AppState.Authenticated) Username.value = AppState.Username || "";
-  else Username.value = "";
-}
+ });
 </script>
