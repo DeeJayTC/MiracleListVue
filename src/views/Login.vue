@@ -1,6 +1,6 @@
 <template>
   <div class="panel panel-primary">
-    <div class="panel-heading">
+    <div class="panel-heading" id="headline">
       <h2>User Login</h2>
     </div>
     <div class="panel-body">
@@ -18,9 +18,9 @@
         <div class="col-xs-12 form-group">
           <label for="name">Email Address</label>
           <input
-            name="name"
+            name="username"
             v-model="Username"
-            id="name"
+            id="username"
             type="text"
             placeholder="Your Email Address"
             class="form-control"
@@ -59,8 +59,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, inject } from 'vue';
-import { useRoute } from 'vue-router';
-import router from '@/router';
+import { useRoute, useRouter } from 'vue-router';
 
 import { version as vueVersion } from 'vue';
 import { version as appversion } from '../../package.json'
@@ -68,6 +67,8 @@ import { AuthenticationManager } from '@/services/AuthenticationManager';
 
 // DI
 let am: AuthenticationManager = inject("AuthenticationManager") as AuthenticationManager;
+  const router = useRouter()
+    const route = useRoute()
 
 // Variablen für Datenbindung
 let Username = ref("");
@@ -77,11 +78,11 @@ let Message = ref("");
 onMounted(async () => { 
   console.log("Login:OnMounted");
   if (process.env.NODE_ENV === 'development') {
-    Username.value = "ihre@email.de";
-    Password.value = "geheim";
+    Username.value = process.env.VUE_APP_ENV_DebugUser;
+    Password.value = process.env.VUE_APP_ENV_DebugPassword;
   }
   // logout?
-  if (useRoute().path.includes("/Logout")) am.Logout();
+  if (route && route.path.includes("/Logout")) am.Logout();
   // vorhandenes Token?
   if (await am.CheckLocalTokenValid()) router.push("/")
 });
